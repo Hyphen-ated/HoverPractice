@@ -1,4 +1,4 @@
-import pygame
+import pygame, sys
 
 # really basic proof of concept for a practice tool for lttp hovering.
 # you need to press a button for 30 or less frames, then release it for only a single frame before repressing.
@@ -46,7 +46,7 @@ while True:
     color = red
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            quit()
+            sys.exit()
         elif event.type == pygame.JOYBUTTONDOWN:
             # they've just pressed a button. now we draw a bar onto the stripe showing how long the button was released.
             # then we put the stripe into the history, which will get it drawn onscreen.

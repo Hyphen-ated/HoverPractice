@@ -1,3 +1,5 @@
+Hover Practice v0.1
+
 This is a practice tool for doing the Hover glitch in The Legend Of Zelda: A Link To The Past.
 
 In order to hover, you have to press your dash button for 30 or fewer frames, then release that button for one single
