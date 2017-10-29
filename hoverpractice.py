@@ -35,6 +35,9 @@ history = []
 max_history_len = window_w // stripe_width
 
 button_frame_counter = 0
+current_streak = 0
+best_streak = 0
+hold_duration_check_passed = False
 red = pygame.Color("#CC1111")
 green = pygame.Color("#11CC11")
 # frame loop
@@ -49,17 +52,26 @@ while True:
             bar_height = button_frame_counter * cell_height            
             if button_frame_counter <= 1:
                 color = green
+                if hold_duration_check_passed:
+                    current_streak += 1
+                    best_streak = max(current_streak, best_streak)
+                else:
+                    current_streak = 0
+            else:
+                current_streak = 0
             pygame.draw.rect(stripe_in_progress, color, pygame.Rect(pad_amount, midline_y, bar_width, bar_height))
             history.append(stripe_in_progress)
             # when a stripe scrolls off the left side of the screen, get rid of it
             if len(history) > max_history_len:
                 history.pop(0)
-            button_frame_counter = 0                
+            button_frame_counter = 0               
         elif event.type == pygame.JOYBUTTONUP:
             # they just released a button. now we're going to make a new stripe and draw a bar onto it showing how long
-            bar_height = button_frame_counter * cell_height            
+            bar_height = button_frame_counter * cell_height
+            hold_duration_check_passed = False
             if button_frame_counter <= 30:
                 color = green
+                hold_duration_check_passed = True
             stripe_in_progress = pygame.Surface((stripe_width, stripe_height))
             pygame.draw.rect(stripe_in_progress, color, pygame.Rect(pad_amount, midline_y - bar_height, bar_width, bar_height))
             button_frame_counter = 0
@@ -72,8 +84,10 @@ while True:
         screen.blit(sface, (idx * 40,0))
         idx += 1
 
-    pygame.draw.line(screen, [230,230,230], [0,300], [800,300])
-    pygame.display.update()
+    pygame.draw.line(screen, [230,230,230], [0,midline_y], [window_w,midline_y])
     
+    streak_text = font.render("Streak: " + str(current_streak) + " -- Best: " + str(best_streak), True, [230,230,230])
+    screen.blit(streak_text, [window_w/2,stripe_height + 20])
+    pygame.display.update()    
     clock.tick(60)
     
