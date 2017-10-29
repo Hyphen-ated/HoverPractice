@@ -1,6 +1,7 @@
 import os, sys, shutil, subprocess, time
 
-version = "0.1"
+with open('version.txt', 'r') as f:
+    version = f.read()
 installName = 'Hover Practice'
 
 # target is where we assemble our final install.
@@ -27,5 +28,6 @@ shutil.copy('boots.png', 'src/dist/boots.png')
 shutil.move('src/dist/', installDir + 'hover-lib/')
 
 shutil.copy('LICENSE.txt', installDir)
+shutil.copy('version.txt', installDir)
 shutil.copy('README.md', installDir + 'README.txt')
 shutil.make_archive("target/" + installName + "-" + version, "zip", 'target', installName + "/")
