@@ -40,6 +40,7 @@ best_streak = 0
 hold_duration_check_passed = False
 red = pygame.Color("#CC1111")
 green = pygame.Color("#11CC11")
+offwhite = pygame.Color(230, 230, 230)
 # frame loop
 while True:
     color = red
@@ -81,12 +82,12 @@ while True:
     screen.fill([0,0,0])
     idx = 0
     for sface in history:
-        screen.blit(sface, (idx * 40,0))
+        screen.blit(sface, (idx * stripe_width,0))
         idx += 1
 
-    pygame.draw.line(screen, [230,230,230], [0,midline_y], [window_w,midline_y])
+    pygame.draw.line(screen, offwhite, [0,midline_y], [window_w,midline_y])
     
-    streak_text = font.render("Streak: " + str(current_streak) + " -- Best: " + str(best_streak), True, [230,230,230])
+    streak_text = font.render("Streak: " + str(current_streak) + " -- Best: " + str(best_streak), True, offwhite)
     screen.blit(streak_text, [window_w/2,stripe_height + 20])
     pygame.display.update()    
     clock.tick(60)
