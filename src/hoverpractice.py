@@ -34,8 +34,14 @@ stripe_in_progress = pygame.Surface((stripe_width, stripe_height))
 history = []
 max_history_len = window_w // stripe_width
 
+min_streak_length = 4 #Number of greens to be considered a streak
+min_good_streak_length = 10 #Number of greens to be considered a 'good' streak
+rolling_average_size = 50 #How many streaks to average
+
 button_frame_counter = 0
 current_streak = 0
+last_streaks = []
+last_good_streak = 0
 best_streak = 0
 hold_duration_check_passed = False
 red = pygame.Color("#CC1111")
@@ -50,16 +56,27 @@ while True:
         elif event.type == pygame.JOYBUTTONDOWN:
             # they've just pressed a button. now we draw a bar onto the stripe showing how long the button was released.
             # then we put the stripe into the history, which will get it drawn onscreen.
-            bar_height = button_frame_counter * cell_height            
+            bar_height = button_frame_counter * cell_height
+            broken_streak = False
             if button_frame_counter <= 1:
                 color = green
                 if hold_duration_check_passed:
                     current_streak += 1
+                    if current_streak >= min_good_streak_length:
+                        last_good_streak = current_streak
                     best_streak = max(current_streak, best_streak)
                 else:
-                    current_streak = 0
+                    broken_streak = True
             else:
+                broken_streak = True
+
+            if broken_streak:
+                if current_streak >= min_streak_length:
+                    last_streaks.append(current_streak)
+                if len(last_streaks) > rolling_average_size:
+                    last_streaks.pop(0)
                 current_streak = 0
+
             pygame.draw.rect(stripe_in_progress, color, pygame.Rect(pad_amount, midline_y, bar_width, bar_height))
             history.append(stripe_in_progress)
             # when a stripe scrolls off the left side of the screen, get rid of it
@@ -87,8 +104,21 @@ while True:
 
     pygame.draw.line(screen, offwhite, [0,midline_y], [window_w,midline_y])
     
-    streak_text = font.render("Streak: " + str(current_streak) + " -- Best: " + str(best_streak), True, offwhite)
-    screen.blit(streak_text, [window_w/2,stripe_height + 20])
+    y = stripe_height + 20
+    streak_text = font.render("Streak: " + str(current_streak), True, offwhite)
+    screen.blit(streak_text, [window_w/2,y])
+    y += font.get_height();
+
+    streak_text = font.render("Best: " + str(best_streak) + " -- Last: " + str(last_good_streak), True, offwhite)
+    screen.blit(streak_text, [window_w/2,y])
+    y += font.get_height();
+
+    if last_streaks:
+        streak_text = font.render("Avg of last " + str(rolling_average_size) + ": " + '{0:.1f}'.format(sum(last_streaks)/float(len(last_streaks))), True, offwhite)
+        screen.blit(streak_text, [window_w/2,y])
+        y += font.get_height();
+
+
     pygame.display.update()    
     clock.tick(60)
-    
+
