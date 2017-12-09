@@ -47,13 +47,39 @@ hold_duration_check_passed = False
 red = pygame.Color("#CC1111")
 green = pygame.Color("#11CC11")
 offwhite = pygame.Color(230, 230, 230)
+
+press_button = font.render("Press your dash button", True, offwhite)
+sx,sy = press_button.get_size()
+screen.blit(press_button, [window_w/2 - sx/2,window_h/2 - sy/2])
+pygame.display.update()
+
+def getDashButton():    
+    while True:
+        for event in pygame.event.get():                   
+            if event is not None:
+                if event.type == pygame.QUIT:
+                    sys.exit()
+                elif event.type == pygame.JOYBUTTONUP:
+                    return event.joy,event.button
+                
+
+joyid, buttonid = getDashButton()
+
+joy = pygame.joystick.Joystick(joyid)
+last_button_pressed = 0
+
 # frame loop
 while True:
-    color = red
     for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            sys.exit()
-        elif event.type == pygame.JOYBUTTONDOWN:
+        if event is not None:
+            if event.type == pygame.QUIT:
+                sys.exit()
+                
+    color = red
+    button_pressed = joy.get_button(buttonid)
+    if button_pressed != last_button_pressed:
+        last_button_pressed = button_pressed
+        if button_pressed:
             # they've just pressed a button. now we draw a bar onto the stripe showing how long the button was released.
             # then we put the stripe into the history, which will get it drawn onscreen.
             bar_height = button_frame_counter * cell_height
@@ -83,7 +109,7 @@ while True:
             if len(history) > max_history_len:
                 history.pop(0)
             button_frame_counter = 0               
-        elif event.type == pygame.JOYBUTTONUP:
+        else: 
             # they just released a button. now we're going to make a new stripe and draw a bar onto it showing how long
             bar_height = button_frame_counter * cell_height
             hold_duration_check_passed = False
