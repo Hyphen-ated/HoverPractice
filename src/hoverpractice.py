@@ -48,6 +48,7 @@ red = pygame.Color("#CC1111")
 green = pygame.Color("#11CC11")
 offwhite = pygame.Color(230, 230, 230)
 
+# first we get what their dash button is, then we poll at 60hz for the status of that specific button.
 press_button = font.render("Press your dash button", True, offwhite)
 sx,sy = press_button.get_size()
 screen.blit(press_button, [window_w/2 - sx/2,window_h/2 - sy/2])
@@ -61,6 +62,7 @@ def getDashButton():
                     sys.exit()
                 elif event.type == pygame.JOYBUTTONUP:
                     return event.joy,event.button
+        clock.tick(60)
                 
 
 joyid, buttonid = getDashButton()
@@ -68,7 +70,7 @@ joyid, buttonid = getDashButton()
 joy = pygame.joystick.Joystick(joyid)
 last_button_pressed = 0
 
-# frame loop
+# main frame loop
 while True:
     for event in pygame.event.get():
         if event is not None:
@@ -80,7 +82,7 @@ while True:
     if button_pressed != last_button_pressed:
         last_button_pressed = button_pressed
         if button_pressed:
-            # they've just pressed a button. now we draw a bar onto the stripe showing how long the button was released.
+            # they've just pressed a button. now we draw a bar onto the stripe showing how long the button had been released.
             # then we put the stripe into the history, which will get it drawn onscreen.
             bar_height = button_frame_counter * cell_height
             broken_streak = False
@@ -110,7 +112,7 @@ while True:
                 history.pop(0)
             button_frame_counter = 0               
         else: 
-            # they just released a button. now we're going to make a new stripe and draw a bar onto it showing how long
+            # they just released a button. now we're going to make a new stripe and draw a bar onto it showing how long it had been pressed.
             bar_height = button_frame_counter * cell_height
             hold_duration_check_passed = False
             if button_frame_counter <= 30:
@@ -135,14 +137,15 @@ while True:
     screen.blit(streak_text, [window_w/2,y])
     y += font.get_height();
 
-    streak_text = font.render("Best: " + str(best_streak) + " -- Last: " + str(last_good_streak), True, offwhite)
+    streak_text = font.render("Best: " + str(best_streak) + " -- Last good: " + str(last_good_streak), True, offwhite)
     screen.blit(streak_text, [window_w/2,y])
     y += font.get_height();
 
-    if last_streaks:
-        streak_text = font.render("Avg of last " + str(rolling_average_size) + ": " + '{0:.1f}'.format(sum(last_streaks)/float(len(last_streaks))), True, offwhite)
-        screen.blit(streak_text, [window_w/2,y])
-        y += font.get_height();
+    # disabling this for now because what it's doing doesn't actually make any sense. todo do something with an axis where the user "locks in" an attempt
+    # if last_streaks:
+    #     streak_text = font.render("Avg of last " + str(rolling_average_size) + ": " + '{0:.1f}'.format(sum(last_streaks)/float(len(last_streaks))), True, offwhite)
+    #     screen.blit(streak_text, [window_w/2,y])
+    #     y += font.get_height();
 
 
     pygame.display.update()    
