@@ -4,7 +4,8 @@ import pygame, sys
 # you need to press a button for 30 or less frames, then release it for only a single frame before repressing.
 # the top bar shows how long you've been pressed, the bottom bar shows how long you've been released.
 # the goal is to have a bunch of all-green bars in a row
-pygame.init()
+pygame.display.init()
+
 pygame.display.set_icon(pygame.image.load("boots.png"))
 pygame.display.set_caption("Hover Practice")
 window_w = 800
