@@ -25,6 +25,7 @@ subprocess.call("cxfreeze.py hoverpractice.py --base-name=Win32GUI --target-dir 
 os.chdir("..")
 
 shutil.copy('boots.png', 'src/dist/boots.png')
+shutil.copytree('images/', 'src/dist/images/')
 shutil.move('src/dist/', installDir + 'hover-lib/')
 
 shutil.copy('LICENSE.txt', installDir)
