@@ -208,7 +208,7 @@ def main():
         del button_history[-1]
         
         if hat_num != -1:
-            val = joy.get_hat(hat_num)
+            (x, val) = joy.get_hat(hat_num)            
             if abs(val) < 0.1:
                 val = 0
             axis_history.insert(0, val)
