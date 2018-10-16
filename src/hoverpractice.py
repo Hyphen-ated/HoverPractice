@@ -175,11 +175,23 @@ def main():
                         sys.exit()
                     elif event.type == pygame.JOYBUTTONUP:
                         return event.joy,event.button
+                    elif event.type == pygame.KEYUP:
+                        return -1, event.key
             clock.tick(60)
+            
+    def getCurrentButtonState(joy, buttonid):
+        if joy:
+            return joy.get_button(buttonid)
+        else:
+            return pygame.key.get_pressed()[buttonid]
                     
     joyid, buttonid = getDashButton()
     
-    joy = pygame.joystick.Joystick(joyid)
+    if joyid == -1:
+        #keyboard
+        joy = None
+    else:
+        joy = pygame.joystick.Joystick(joyid)
     
     # store a list of what the button state was on the last few frames.
     # the value at 0 is the current frame, 1 is the previous frame, etc.
@@ -204,15 +216,15 @@ def main():
                     hat_num = -1
                     
         color = red
-        button_history.insert(0, joy.get_button(buttonid))
+        button_history.insert(0, getCurrentButtonState(joy, buttonid))
         del button_history[-1]
         
-        if hat_num != -1:
+        if hat_num != -1 and joy:
             (x, val) = joy.get_hat(hat_num)            
             if abs(val) < 0.1:
                 val = 0
             axis_history.insert(0, val)
-        elif axis_num != -1:
+        elif axis_num != -1 and joy:
             val = joy.get_axis(axis_num)
             if abs(val) < 0.1:
                 val = 0
