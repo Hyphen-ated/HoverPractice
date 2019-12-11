@@ -13,4 +13,4 @@ a successful hover input. The goal is to reliably have long stretches of all gre
 Each time you start the tool, it asks what your dash button is. You can use any controller button or keyboard key.
 If you use a controller, you can also press down on a dpad or stick to see Link move.
 
-![](https://media.giphy.com/media/xUOxfkzyg4Fqn4gtUs/giphy.gif)
+![](https://i.imgur.com/FcgMSfp.gif)
