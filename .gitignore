@@ -1,5 +1,6 @@
 *.pyc
 .idea/
+env/
 dist/
 src/dist/
 target/
