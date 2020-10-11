@@ -3,8 +3,8 @@
 This is a practice tool for doing the [Hover glitch][] in The Legend Of Zelda: A
 Link To The Past.
 
-[Download the Window version here][download] (get the latest file that doesn't
-have "source code" in the name).
+[Download the Windows version here][download] (get the latest file that doesn't
+have "source code" in the name). This tool also works on MacOS; see later in this readme for details.
 
 [Hover glitch]: https://www.alttp-wiki.net/index.php/Hovering
 [download]: https://www.alttp-wiki.net/index.php/Hovering
